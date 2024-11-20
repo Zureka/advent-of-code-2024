@@ -1,6 +1,6 @@
-# Advent Of Code 2023
+# Advent Of Code 2024
 
-[Advent of Code](https://adventofcode.com/) 2023 solutions completed in Elixir.
+[Advent of Code](https://adventofcode.com/) 2024 solutions completed in Elixir.
 
 ## Running
 
