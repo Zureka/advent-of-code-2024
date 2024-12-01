@@ -60,7 +60,7 @@ defmodule Mix.Tasks.Day01 do
     {:ok, input} = File.read("inputs/day01-input.txt")
 
     IO.puts("--- Part 1 ---")
-    IO.inspect(Day01.Part1.solve(input))
+    IO.puts(Day01.Part1.solve(input))
     IO.puts("")
     IO.puts("--- Part 2 ---")
     IO.puts(Day01.Part2.solve(input))
