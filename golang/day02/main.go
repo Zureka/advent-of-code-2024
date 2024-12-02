@@ -9,8 +9,9 @@ import (
 )
 
 func main() {
-	filename := "test.txt"
+	filename := "input.txt"
 	part1(filename)
+	part2(filename)
 }
 
 func part1(filename string) {
@@ -18,12 +19,40 @@ func part1(filename string) {
 	answer := 0
 
 	for _, report := range reports {
-		if (verifyAllDecrease(report) || verifyAllIncrease(report)) && validateDifferenceThresholds(report) {
+		valid, _ := validateReport(report)
+		if valid {
 			answer++
 		}
 	}
 
 	message := fmt.Sprintf("Part 1: %d", answer)
+	fmt.Println(message)
+}
+
+func part2(filename string) {
+	reports := processInput(filename)
+	answer := 0
+
+	for _, report := range reports {
+		valid, invalidIndex := validateReport(report)
+
+		if valid {
+			answer++
+		} else {
+			newReport1 := generateNewReport(report, int(math.Max(float64(invalidIndex-1), 0)))
+			newReport2 := generateNewReport(report, invalidIndex)
+			newReport3 := generateNewReport(report, invalidIndex+1)
+			valid1, _ := validateReport(newReport1)
+			valid2, _ := validateReport(newReport2)
+			valid3, _ := validateReport(newReport3)
+
+			if valid1 || valid2 || valid3 {
+				answer++
+			}
+		}
+	}
+
+	message := fmt.Sprintf("Part 2: %d", answer)
 	fmt.Println(message)
 }
 
@@ -54,52 +83,49 @@ func processInput(filename string) [][]int {
 		reports = append(reports, levels)
 	}
 
-	message := fmt.Sprintf("Reports: %v", reports)
-	fmt.Println(message)
-
 	return reports
 }
 
-func verifyAllIncrease(report []int) bool {
-	result := true
-
-	for i, level := range report {
-		if i != 0 && level >= report[i-1] {
-			result = false
-			break
-		}
+func validateReport(report []int) (bool, int) {
+	var levelType string
+	if report[0] > report[1] {
+		levelType = "increase"
+	} else {
+		levelType = "decrease"
 	}
 
-	return result
-}
+	if levelType == "increase" {
+		for i, level := range report {
+			validIndex := i != len(report)-1
 
-func verifyAllDecrease(report []int) bool {
-	result := true
-
-	for i, level := range report {
-		if i != 0 && level <= report[i-1] {
-			result = false
-			break
+			if validIndex && level <= report[i+1] {
+				return false, i
+			} else if validIndex && math.Abs(float64(level-report[i+1])) > 3.0 {
+				return false, i
+			}
 		}
-	}
-
-	return result
-}
-
-func validateDifferenceThresholds(report []int) bool {
-	result := true
-
-	for i, level := range report {
-		if i > 0 && i < len(report)-1 {
-			before := report[i-1] - level
-			after := level - report[i+1]
-
-			if math.Abs(float64(before)) > 3.0 || math.Abs(float64(after)) > 3.0 {
-				result = false
-				break
+	} else {
+		for i, level := range report {
+			validIndex := i != len(report)-1
+			if validIndex && level >= report[i+1] {
+				return false, i
+			} else if validIndex && math.Abs(float64(level-report[i+1])) > 3.0 {
+				return false, i
 			}
 		}
 	}
 
-	return result
+	return true, -1
+}
+
+func generateNewReport(report []int, invalidIndex int) []int {
+	newReport := []int{}
+
+	for i, level := range report {
+		if i != invalidIndex {
+			newReport = append(newReport, level)
+		}
+	}
+
+	return newReport
 }
