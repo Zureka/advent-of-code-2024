@@ -9,6 +9,7 @@ import (
 func main() {
 	filename := "input.txt"
 	part1(filename)
+	part2(filename)
 }
 
 func part1(filename string) {
@@ -24,6 +25,31 @@ func part1(filename string) {
 	fmt.Printf("RightDiagonal: %d\n", numRightDiagonal)
 
 	fmt.Printf("Part 1: %d\n", numHorizontal+numVertical+numLeftDiagonal+numRightDiagonal)
+}
+
+func part2(filename string) {
+	grid := processInput(filename)
+	answer := 0
+
+	for i := range grid {
+		if i+2 >= len(grid) {
+			break
+		}
+
+		for j := range len(grid[0]) - 2 {
+			if grid[i][j] == "S" && grid[i][j+2] == "S" && grid[i+1][j+1] == "A" && grid[i+2][j] == "M" && grid[i+2][j+2] == "M" {
+				answer++
+			} else if grid[i][j] == "M" && grid[i][j+2] == "M" && grid[i+1][j+1] == "A" && grid[i+2][j] == "S" && grid[i+2][j+2] == "S" {
+				answer++
+			} else if grid[i][j] == "S" && grid[i][j+2] == "M" && grid[i+1][j+1] == "A" && grid[i+2][j] == "S" && grid[i+2][j+2] == "M" {
+				answer++
+			} else if grid[i][j] == "M" && grid[i][j+2] == "S" && grid[i+1][j+1] == "A" && grid[i+2][j] == "M" && grid[i+2][j+2] == "S" {
+				answer++
+			}
+		}
+	}
+
+	fmt.Printf("Part 2: %d\n", answer)
 }
 
 func processInput(filename string) [][]string {
@@ -46,8 +72,6 @@ func processInput(filename string) [][]string {
 
 func countHorizontal(grid [][]string) int {
 	return findMatches(grid)
-	// fmt.Println("Normal Grid:")
-	// printGrid(grid)
 }
 
 func countVertical(grid [][]string) int {
@@ -63,9 +87,6 @@ func countVertical(grid [][]string) int {
 		}
 	}
 
-	// fmt.Println("Columns:")
-	// printGrid(transposedGrid)
-
 	return findMatches(transposedGrid)
 }
 
@@ -80,9 +101,6 @@ func countLeftDiagonal(grid [][]string) int {
 		}
 	}
 
-	// fmt.Println("Diagonals:")
-	// printGrid(diagonals)
-
 	return findMatches(diagonals)
 }
 
@@ -96,9 +114,6 @@ func countRightDiagonal(grid [][]string) int {
 			diagonals[numCols-i+j-1] = append(diagonals[numCols-i+j-1], cell)
 		}
 	}
-
-	// fmt.Println("Diagonals:")
-	// printGrid(diagonals)
 
 	return findMatches(diagonals)
 }
@@ -122,10 +137,3 @@ func findMatches(grid [][]string) int {
 
 	return answer
 }
-
-// func printGrid(grid [][]string) {
-// 	for _, row := range grid {
-// 		fmt.Println(strings.Join(row, " "))
-// 	}
-// 	fmt.Println()
-// }
