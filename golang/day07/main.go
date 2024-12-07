@@ -81,23 +81,18 @@ func solve2(answer int, currentTotal int, values []int, index int) int {
 	}
 
 	value := values[index]
-	newValues := []int{}
 	concatAnswer := 0
 	newValue := 0
 
 	if index != len(values) {
 		for i, v := range values {
-
 			if i == index {
-				concatValue, _ := strconv.Atoi(fmt.Sprintf("%d%d", currentTotal, values[i]))
+				concatValue, _ := strconv.Atoi(fmt.Sprintf("%d%d", currentTotal, v))
 				newValue = concatValue
-				newValues = append(newValues, newValue)
-			} else {
-				newValues = append(newValues, v)
 			}
 		}
 
-		concatAnswer = solve2(answer, newValue, newValues, index+1)
+		concatAnswer = solve2(answer, newValue, values, index+1)
 	}
 
 	return solve2(answer, currentTotal+value, values, index+1) + solve2(answer, currentTotal*value, values, index+1) + concatAnswer
