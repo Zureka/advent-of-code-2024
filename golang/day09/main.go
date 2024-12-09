@@ -15,7 +15,7 @@ func main() {
 
 func part1(filename string) {
 	chars := processInput(filename)
-	blocks := constructBlocks(chars)
+	blocks, _ := constructBlocks(chars)
 
 	for i := 0; i < len(blocks); i++ {
 		index := len(blocks) - 1 - i
@@ -47,25 +47,12 @@ func part1(filename string) {
 
 func part2(filename string) {
 	chars := processInput(filename)
-	blocks := constructBlocks(chars)
+	blocks, blockSizes := constructBlocks(chars)
 
-	blockSize := map[string][]int{}
-
-	for i, block := range blocks {
-		if block == "." {
-			continue
-		}
-		if blockSize[block] == nil {
-			blockSize[block] = []int{i, 1}
-		} else {
-			blockSize[block] = []int{blockSize[block][0], blockSize[block][1] + 1}
-		}
-	}
-
-	for i := 0; i < len(blockSize); i++ {
-		block := strconv.Itoa(len(blockSize) - 1 - i)
-		blockIndex := blockSize[block][0]
-		size := blockSize[block][1]
+	for i := 0; i < len(blockSizes); i++ {
+		block := strconv.Itoa(len(blockSizes) - 1 - i)
+		blockIndex := blockSizes[block][0]
+		size := blockSizes[block][1]
 		freeBlockIndex := -1
 		freeBlockSize := 0
 
@@ -82,10 +69,8 @@ func part2(filename string) {
 				freeBlockSize++
 
 				if freeBlockSize == size {
-					for j, b := range blocks {
-						if b == block {
-							blocks[j] = "."
-						}
+					for i := 0; i < size; i++ {
+						blocks[blockIndex+i] = "."
 					}
 
 					for i := 0; i < freeBlockSize; i++ {
@@ -117,26 +102,28 @@ func calcChecksum(blocks []string) int {
 	return answer
 }
 
-func constructBlocks(chars []string) []string {
+func constructBlocks(chars []string) ([]string, map[string][]int) {
 	id := 0
 	blocks := []string{}
+	blockSizes := map[string][]int{}
 
 	for i, char := range chars {
+		num, _ := strconv.Atoi(char)
+
 		if i%2 == 0 {
-			num, _ := strconv.Atoi(char)
+			blockSizes[strconv.Itoa(id)] = []int{len(blocks), num}
 			for i := 0; i < num; i++ {
 				blocks = append(blocks, strconv.Itoa(id))
 			}
 			id++
 		} else {
-			num, _ := strconv.Atoi(char)
 			for i := 0; i < num; i++ {
 				blocks = append(blocks, ".")
 			}
 		}
 	}
 
-	return blocks
+	return blocks, blockSizes
 }
 
 func processInput(filename string) []string {
