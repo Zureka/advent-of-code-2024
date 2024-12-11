@@ -11,24 +11,33 @@ import (
 
 func main() {
 	filename := "input.txt"
-	part1(filename)
-	part2(filename)
+	showAnswer := false
+	part1(filename, showAnswer)
+	part2(filename, showAnswer)
 }
 
-func part1(filename string) {
+func part1(filename string, showAnswer bool) {
 	start := time.Now()
 	grid, trailheads := processInput(filename)
 	answer := processTrails(trailheads, grid, true)
 
-	fmt.Printf("Part 1: %d\tExecution time: %v\n", answer, time.Since(start))
+	if showAnswer {
+		fmt.Printf("Part 1: %d\tExecution time: %v\n", answer, time.Since(start))
+	} else {
+		fmt.Printf("Part 1 - Execution time: %v\n", time.Since(start))
+	}
 }
 
-func part2(filename string) {
+func part2(filename string, showAnswer bool) {
 	start := time.Now()
 	grid, trailheads := processInput(filename)
 	answer := processTrails(trailheads, grid, false)
 
-	fmt.Printf("Part 2: %d\tExecution time: %v\n", answer, time.Since(start))
+	if showAnswer {
+		fmt.Printf("Part 2: %d\tExecution time: %v\n", answer, time.Since(start))
+	} else {
+		fmt.Printf("Part 2 - Execution time: %v\n", time.Since(start))
+	}
 }
 
 func processTrails(trailheads [][]int, grid [][]int, distinct bool) int {
