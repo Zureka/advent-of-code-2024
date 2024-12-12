@@ -70,11 +70,10 @@ func blink(stones []int) []int {
 		if stone == 0 {
 			newStones = append(newStones, 1)
 		} else if len(stoneStr)%2 == 0 {
-			chars := strings.Split(stoneStr, "")
-			firstNewStone, _ := strconv.Atoi(strings.Join(chars[0:len(stoneStr)/2], ""))
-			secondNewStone, _ := strconv.Atoi(strings.Join(chars[len(stoneStr)/2:], ""))
-			newStones = append(newStones, firstNewStone)
-			newStones = append(newStones, secondNewStone)
+			stone1, _ := strconv.Atoi(stoneStr[:len(stoneStr)/2])
+			stone2, _ := strconv.Atoi(stoneStr[len(stoneStr)/2:])
+			newStones = append(newStones, stone1)
+			newStones = append(newStones, stone2)
 		} else {
 			newStone := stone * 2024
 			newStones = append(newStones, newStone)
